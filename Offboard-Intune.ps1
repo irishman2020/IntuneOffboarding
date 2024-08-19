@@ -166,7 +166,7 @@ $OneDriveUserStoragePath = Get-ChildItem -Path $BaseFolderPath -Directory | Wher
 #{
   Remove-Item -Path "$($oneDriveCachePath)\*" -Recurse -Force
   ###################### Uncomment below to move the old onedrive data to a hidden folder. Without this step, the old onedrive folder will still be visible to the user.#####
-  #Rename-ITem -Path $OneDriveUserStoragePath -NewName ".oldTenantOneDrive" 
+  #Rename-Item -Path $OneDriveUserStoragePath -NewName ".oldTenantOneDrive" 
   
 #}
 
@@ -181,5 +181,5 @@ foreach($Window in $ShellWindows)
   }
 }
 
-log off to complete sign-out
+#log off to complete sign-out
 shutdown.exe /l /f
