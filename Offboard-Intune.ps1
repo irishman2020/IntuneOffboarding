@@ -102,7 +102,7 @@ foreach($process in $processes)
 
 # Get user info
 $currentUser = (Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object UserName).UserName
-$currentUserTruncated = currentUser.Split("\")[-1]
+$currentUserTruncated = $currentUser.Split("\")[-1]
 $sid = (New-Object System.Security.Principal.NTAccount($currentUser)).Translate([System.Security.Principal.SecurityIdentifier]).Value
 $profilePath = (Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\$($sid)" -Name "ProfileImagePath")
 
