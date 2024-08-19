@@ -127,7 +127,7 @@ echo $_
 $credential = cmdkey /list | ForEach-Object{if($_ -like "*Target:*" -and $_ -like "*msteams*"){cmdkey /del:($_ -replace " ","" -replace "Target:","")}}
 
 #Remove Reg.Key
-$Regkeypath= "HKCU:\Software\Microsoft\Office\Teams" 
+$Regkeypath= "HKU:$($sid)\Software\Microsoft\Office\Teams"
 $value = (Get-ItemProperty $Regkeypath).HomeUserUpn -eq $null
 If ($value -eq $False) 
 { 
