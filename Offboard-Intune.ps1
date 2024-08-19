@@ -115,7 +115,7 @@ Write-Host "Teams Process Sucessfully Stopped"
 
 #Clear Team Cache
 try{
-Get-ChildItem -Path "C:\Users\jensec\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\LocalCache" | Remove-Item -Recurse
+Get-ChildItem -Path "C:\Users\$currentuser\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\LocalCache" | Remove-Item -Recurse
 
 Write-Host "Teams Cache Cleaned" 
 }catch{
@@ -142,7 +142,7 @@ $AADBrokerFolder = $AADBrokerFolder[0];
 Get-ChildItem "$AADBrokerFolder\AC\TokenBroker\Accounts" | Remove-Item -Recurse -Force
 
 
-################################################## clear oulook cache  ###################################################
+################################################## clear oulook cache and recreate outlook profile  ###################################################
 $offboard_confirm = "C:\offboarded_outlook_profile.txt"
 $output = "Outlook Offboarding Already Done"
 if(Test-Path $offboard_confirm)
@@ -150,17 +150,24 @@ if(Test-Path $offboard_confirm)
 
 }else{
     Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Outlook\Profiles\Outlook\*" -Recurse
-    del C:\Users\jensec\AppData\Local\Microsoft\Outlook\*.ost
-    del C:\Users\jensec\AppData\Local\Microsoft\Outlook\*.nst
+    del C:\Users\$currentuser\AppData\Local\Microsoft\Outlook\*.ost
+    del C:\Users\$currentuser\AppData\Local\Microsoft\Outlook\*.nst
+    New-Item -Path HKCU:\SOFTWARE\Microsoft\Office\16.0\Outlook\Profiles -Name Outlook -force
     Write-Host $output | Out-File -FilePath $offboard_confirm
     }
 
 
-# clear onedrive cache
-$oneDrivePath = "$($profilePath)\AppData\Local\Microsoft\OneDrive"
+# clear onedrive cache and rename old onedrive folders (could also choose to delete them, putting both options here)
+$oneDriveCachePath = "$($profilePath)\AppData\Local\Microsoft\OneDrive"
+$BaseFolderPath = "C:\Users\$currentuser\"
+$OneDriveUserStoragePath = Get-ChildItem -Path $BaseFolderPath -Directory | Where-Object { $_.Name -like "Onedrive - *" 
+
 #if(Test-Path $oneDrivePath)
 #{
-  Remove-Item -Path "$($oneDrivePath)\*" -Recurse -Force
+  Remove-Item -Path "$($oneDriveCachePath)\*" -Recurse -Force
+  ###################### Uncomment below to move the old onedrive data to a hidden folder. Without this step, the old onedrive folder will still be visible to the user.#####
+  #Rename-ITem -Path $OneDriveUserStoragePath -NewName ".oldTenantOneDrive" 
+  
 #}
 
 # sign out from windows
