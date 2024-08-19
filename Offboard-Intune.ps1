@@ -102,6 +102,7 @@ foreach($process in $processes)
 
 # Get user info
 $currentUser = (Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object UserName).UserName
+$currentUserTruncated = currentUser.Split("\")[-1]
 $sid = (New-Object System.Security.Principal.NTAccount($currentUser)).Translate([System.Security.Principal.SecurityIdentifier]).Value
 $profilePath = (Get-ItemPropertyValue -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\$($sid)" -Name "ProfileImagePath")
 
@@ -115,7 +116,7 @@ Write-Host "Teams Process Sucessfully Stopped"
 
 #Clear Team Cache
 try{
-Get-ChildItem -Path "C:\Users\$currentuser\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\LocalCache" | Remove-Item -Recurse
+Get-ChildItem -Path "C:\Users\$currentUserTruncated\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\LocalCache" | Remove-Item -Recurse
 
 Write-Host "Teams Cache Cleaned" 
 }catch{
@@ -150,8 +151,8 @@ if(Test-Path $offboard_confirm)
 
 }else{
     Remove-Item -Path "HKCU:\Software\Microsoft\Office\16.0\Outlook\Profiles\Outlook\*" -Recurse
-    del C:\Users\$currentuser\AppData\Local\Microsoft\Outlook\*.ost
-    del C:\Users\$currentuser\AppData\Local\Microsoft\Outlook\*.nst
+    del C:\Users\$currentUserTruncated\AppData\Local\Microsoft\Outlook\*.ost
+    del C:\Users\$currentUserTruncated\AppData\Local\Microsoft\Outlook\*.nst
     New-Item -Path HKCU:\SOFTWARE\Microsoft\Office\16.0\Outlook\Profiles -Name Outlook -force
     Write-Host $output | Out-File -FilePath $offboard_confirm
     }
@@ -159,7 +160,7 @@ if(Test-Path $offboard_confirm)
 
 # clear onedrive cache and rename old onedrive folders (could also choose to delete them, putting both options here)
 $oneDriveCachePath = "$($profilePath)\AppData\Local\Microsoft\OneDrive"
-$BaseFolderPath = "C:\Users\$currentuser\"
+$BaseFolderPath = "C:\Users\$currentUserTruncated\"
 $OneDriveUserStoragePath = Get-ChildItem -Path $BaseFolderPath -Directory | Where-Object { $_.Name -like "Onedrive - *" }
 
 #if(Test-Path $oneDrivePath)
