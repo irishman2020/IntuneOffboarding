@@ -160,7 +160,7 @@ if(Test-Path $offboard_confirm)
 # clear onedrive cache and rename old onedrive folders (could also choose to delete them, putting both options here)
 $oneDriveCachePath = "$($profilePath)\AppData\Local\Microsoft\OneDrive"
 $BaseFolderPath = "C:\Users\$currentuser\"
-$OneDriveUserStoragePath = Get-ChildItem -Path $BaseFolderPath -Directory | Where-Object { $_.Name -like "Onedrive - *" 
+$OneDriveUserStoragePath = Get-ChildItem -Path $BaseFolderPath -Directory | Where-Object { $_.Name -like "Onedrive - *" }
 
 #if(Test-Path $oneDrivePath)
 #{
